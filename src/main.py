@@ -3,11 +3,12 @@ import os
 import pprint
 
 class Player:
-    def __init__(self, id, season, name, team, games_played, goals, assists, points, powerplay_goals, shorthanded_goals, special_goals, shots, hits, blocks):
+    def __init__(self, id='0', season='0', name='0', team='0', position='0', games_played='0', goals='0', assists='0', points='0', powerplay_goals='0', shorthanded_goals='0', special_goals='0', shots='0', hits='0', blocks='0'):
         self.id = int(id)
         self.season = str(int(season)) + '-' + str((int(season) + 1))[-2:]
         self.name = str(name)
         self.team = str(team)
+        self.position = str(position)
         self.games_played = int(games_played)
         self.goals = int(goals)
         self.assists = int(assists)
@@ -20,7 +21,7 @@ class Player:
         self.blocks = int(blocks)
 
     def __str__(self):
-        return str(self.name) + " " + str(self.season) + " " + str(self.games_played) + "GP " + str(self.goals) + "G " + str(self.assists) + "A " + str(self.points) + "P " + str(self.powerplay_goals) + "PPG " + str(self.shorthanded_goals) + "SHG " + str(self.special_goals) + "SG " + str(self.shots) + "SOG " + str(self.hits) + "H " + str(self.blocks) + "B"
+        return str(self.name) + " " + str(self.position) + " " + str(self.season) + " " + str(self.games_played) + "GP " + str(self.goals) + "G " + str(self.assists) + "A " + str(self.points) + "P " + str(self.powerplay_goals) + "PPG " + str(self.shorthanded_goals) + "SHG " + str(self.special_goals) + "SG " + str(self.shots) + "SOG " + str(self.hits) + "H " + str(self.blocks) + "B"
     
     __repr__ = __str__
 
@@ -40,13 +41,17 @@ for season in range(2008, 2023):
             # create dictionary entry
             id = int(row[0])
             if id not in season_dictionary:
-                season_dictionary[id] = Player(id, '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0')
+                season_dictionary[id] = Player(id=id)
             
             # all situations
             if (row[5] == 'all'):
                 season_dictionary[id].season = int(float(row[1]))
                 season_dictionary[id].name = str(row[2])
                 season_dictionary[id].team = str(row[3])
+                if str(row[4]) == 'L' or str(row[4]) == 'R':
+                    season_dictionary[id].position = 'W'
+                else:
+                    season_dictionary[id].position = str(row[4])
                 season_dictionary[id].games_played = int(float(row[6]))
                 season_dictionary[id].goals = int(float(row[34]))
                 season_dictionary[id].assists = int(float(row[27])+float(row[28]))

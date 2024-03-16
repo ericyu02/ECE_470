@@ -3,7 +3,7 @@ import os
 import pprint
 
 class Player:
-    def __init__(self, id='0', season='0', name='0', team='0', position='0', games_played='0', goals='0', assists='0', points='0', powerplay_goals='0', shorthanded_goals='0', special_goals='0', shots='0', hits='0', blocks='0'):
+    def __init__(self, id='0', season='0', name='0', team='0', position='0', games_played='0', goals='0', assists='0', points='0', powerplay_goals='0', shorthanded_goals='0', special_goals='0', x_goals = '0', shots='0', hits='0', blocks='0'):
         self.id = int(id)
         self.season = str(int(season)) + '-' + str((int(season) + 1))[-2:]
         self.name = str(name)
@@ -16,6 +16,7 @@ class Player:
         self.powerplay_goals = int(powerplay_goals)
         self.shorthanded_goals = int(shorthanded_goals)
         self.special_goals = int(special_goals)
+        self.x_goals = int(x_goals)
         self.shots = int(shots)
         self.hits = int(hits)
         self.blocks = int(blocks)
@@ -56,6 +57,7 @@ for season in range(2008, 2023):
                 season_dictionary[id].goals = int(float(row[34]))
                 season_dictionary[id].assists = int(float(row[27])+float(row[28]))
                 season_dictionary[id].points = int(float(row[33]))
+                season_dictionary[id].x_goals = int(float(row[18]))
                 season_dictionary[id].shots = int(float(row[29]))
                 season_dictionary[id].hits = int(float(row[46]))
                 season_dictionary[id].blocks = int(float(row[83]))

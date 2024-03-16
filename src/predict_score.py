@@ -13,7 +13,7 @@ def predict(season, id):
 
     for prev_seasons in range(season-3, season):
         prev_season = str(prev_seasons) + '-' + str((prev_seasons + 1))[-2:]
-        #grab data from dataset
+        # grab data from dataset
         predicted_stats.games_played += dataset_dictionary[prev_season][id].games_played / 3
         predicted_stats.goals += dataset_dictionary[prev_season][id].goals / 3
         predicted_stats.assists += dataset_dictionary[prev_season][id].assists / 3

@@ -3,7 +3,7 @@ import os
 import pprint
 
 class Player:
-    def __init__(self, id='0', season='0', name='0', team='0', position='0', games_played='0', goals='0', assists='0', points='0', powerplay_goals='0', shorthanded_goals='0', special_goals='0', expected_goals = '0', shots='0', hits='0', blocks='0'):
+    def __init__(self, id='0000000', season='0000', name='NAME', team='TEAM', position='POS', games_played='0', goals='0', assists='0', points='0', powerplay_goals='0', shorthanded_goals='0', special_goals='0', expected_goals = '0', shots='0', hits='0', blocks='0'):
         self.id = int(id)
         self.season = int(season)
         self.name = str(name)
@@ -20,6 +20,17 @@ class Player:
         self.shots = float(shots)
         self.hits = float(hits)
         self.blocks = float(blocks)
+
+    def round_stats(self):
+        self.goals = round(self.goals)
+        self.assists = round(self.assists)
+        self.points = self.goals + self.assists
+        self.powerplay_goals = round(self.powerplay_goals)
+        self.shorthanded_goals = round(self.shorthanded_goals)
+        self.shots = round(self.shots)
+        self.hits = round(self.hits)
+        self.blocks = round(self.blocks)
+        return self
 
     def __str__(self):
         return str(self.name) + " " + str(self.position) + " " + str(self.season) + '-' + str(self.season + 1)[-2:] + " " + str(self.games_played) + "GP " + str(self.goals) + "G " + str(self.assists) + "A " + str(self.points) + "P " + str(self.powerplay_goals) + "PPG " + str(self.shorthanded_goals) + "SHG " + str(self.shots) + "SOG " + str(self.hits) + "H " + str(self.blocks) + "B"

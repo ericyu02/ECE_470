@@ -13,4 +13,10 @@ args = parser.parse_args()
 
 season = int(args.season.split("-")[0])
 
+# Player    id
+# McDavid   8478402
+# Matthews  8479318
+# Maka:     8480069
+# Trocheck  8476389
+
 print(predict(season, args.id))

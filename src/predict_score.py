@@ -30,17 +30,31 @@ def predict(season, id):
     predicted_stats.position = dataset_dictionary[season - 1][id].position
 
     for prev_season in range(season - season_range, season):
-        print(prev_season)
-        # grab data from dataset
-        predicted_stats.games_played += dataset_dictionary[prev_season][id].games_played / season_range
-        predicted_stats.goals += dataset_dictionary[prev_season][id].goals / season_range
-        predicted_stats.assists += dataset_dictionary[prev_season][id].assists / season_range
-        predicted_stats.points += dataset_dictionary[prev_season][id].points / season_range
-        predicted_stats.powerplay_goals += dataset_dictionary[prev_season][id].powerplay_goals / season_range
-        predicted_stats.shorthanded_goals += dataset_dictionary[prev_season][id].shorthanded_goals / season_range
-        predicted_stats.special_goals += dataset_dictionary[prev_season][id].special_goals / season_range
-        predicted_stats.shots += dataset_dictionary[prev_season][id].shots / season_range
-        predicted_stats.hits += dataset_dictionary[prev_season][id].hits / season_range
-        predicted_stats.blocks += dataset_dictionary[prev_season][id].blocks / season_range
+        
+        # normalize each stat by games played per season
+        gp = dataset_dictionary[prev_season][id].games_played
+        g = dataset_dictionary[prev_season][id].goals / gp
+        xg = dataset_dictionary[prev_season][id].expected_goals / gp
+
+        a = dataset_dictionary[prev_season][id].assists / gp
+        
+        ppg = dataset_dictionary[prev_season][id].powerplay_goals / gp
+        shg = dataset_dictionary[prev_season][id].shorthanded_goals / gp
+        special_g = dataset_dictionary[prev_season][id].special_goals / gp
+
+        s = dataset_dictionary[prev_season][id].shots / gp
+        h = dataset_dictionary[prev_season][id].hits / gp
+        b = dataset_dictionary[prev_season][id].blocks / gp
+
+        # TODO decide on best weights for expected and special goals
+        predicted_stats.games_played = 82
+        predicted_stats.goals += (g + ((xg - g)*0.2) + (special_g*0.5)) * 82/season_range
+        predicted_stats.assists += (a) * 82/season_range
+        predicted_stats.points += (g + a) * 82/season_range
+        predicted_stats.powerplay_goals += (ppg + (special_g*0.4)) * 82/season_range
+        predicted_stats.shorthanded_goals += (shg + (special_g*0.1)) * 82/season_range
+        predicted_stats.shots += (s) * 82/season_range
+        predicted_stats.hits += (h) * 82/season_range
+        predicted_stats.blocks += (b) * 82/season_range
 
     return predicted_stats

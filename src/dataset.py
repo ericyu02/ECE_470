@@ -5,7 +5,7 @@ import pprint
 class Player:
     def __init__(self, id='0', season='0', name='0', team='0', position='0', games_played='0', goals='0', assists='0', points='0', powerplay_goals='0', shorthanded_goals='0', special_goals='0', x_goals = '0', shots='0', hits='0', blocks='0'):
         self.id = int(id)
-        self.season = str(int(season)) + '-' + str((int(season) + 1))[-2:]
+        self.season = int(season)
         self.name = str(name)
         self.team = str(team)
         self.position = str(position)
@@ -22,19 +22,18 @@ class Player:
         self.blocks = int(blocks)
 
     def __str__(self):
-        return str(self.name) + " " + str(self.position) + " " + str(self.season) + " " + str(self.games_played) + "GP " + str(self.goals) + "G " + str(self.assists) + "A " + str(self.points) + "P " + str(self.powerplay_goals) + "PPG " + str(self.shorthanded_goals) + "SHG " + str(self.special_goals) + "SG " + str(self.shots) + "SOG " + str(self.hits) + "H " + str(self.blocks) + "B"
+        return str(self.name) + " " + str(self.position) + " " + str(self.season) + '-' + str(self.season + 1)[-2:] + " " + str(self.games_played) + "GP " + str(self.goals) + "G " + str(self.assists) + "A " + str(self.points) + "P " + str(self.powerplay_goals) + "PPG " + str(self.shorthanded_goals) + "SHG " + str(self.special_goals) + "SG " + str(self.shots) + "SOG " + str(self.hits) + "H " + str(self.blocks) + "B"
 
     __repr__ = __str__
 
 dataset_dictionary = {}
 
 for season in range(2008, 2023):
-    season = str(season) + '-' + str((season + 1))[-2:]
     season_dictionary = {}
 
     current_dir = os.path.dirname(__file__)
-    file_path = os.path.join(current_dir, '../res/moneypuck/moneypuck_' + season + '.csv')
-
+    file_path = os.path.join(current_dir, '../res/moneypuck/moneypuck_' + str(season) + '-' + str((season + 1))[-2:] + '.csv')
+ 
     with open(file_path, 'r') as file:
         reader = csv.reader(file)
         headers = next(reader)

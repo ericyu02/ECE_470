@@ -6,8 +6,9 @@ def predict_player(season, id):
     # add all player entries from dataset dictionary to player dictionary
     player_dictionary = {}
     for temp_season, temp_entry in dataset_dictionary.items():
-        if id in temp_entry:
-            player_dictionary[temp_season] = temp_entry[id]
+        if temp_season < season:
+            if id in temp_entry:
+                player_dictionary[temp_season] = temp_entry[id]
 
     # pad dictionary with empty stats for missing years
     min_season = min(player_dictionary.keys())

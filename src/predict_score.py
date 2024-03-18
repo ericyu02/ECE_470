@@ -66,6 +66,9 @@ def predict_player(season, id):
             predicted_stats.hits += (h) * 82/season_range
             predicted_stats.blocks += (b) * 82/season_range
     
+    # TODO formula for fantasy score
+    predicted_stats.fantasy_score = 3*predicted_stats.goals + 2*predicted_stats.assists + 0.5*predicted_stats.shots + 0.5*predicted_stats.blocks + 0.5*predicted_stats.powerplay_goals + 0.5*predicted_stats.shorthanded_goals
+
     # NOTE points calculated after rounding in class
     return predicted_stats.round_stats()
 
@@ -79,6 +82,6 @@ def predict_season(season):
     # sort predicted_season by points
     for id, stats in predicted_season.items():
         # TODO this deletes duplicate entries so need a different method
-        ranking[stats.points] = stats
+        ranking[stats.fantasy_score] = stats
 
     return ranking

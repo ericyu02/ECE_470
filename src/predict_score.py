@@ -2,7 +2,6 @@ from dataset import dataset_dictionary, Player
 import pprint
 
 def predict_player(season, id):
-    
     # add all player entries from dataset dictionary to player dictionary
     player_dictionary = {}
     for temp_season, temp_entry in dataset_dictionary.items():
@@ -39,38 +38,41 @@ def predict_player(season, id):
     if games_played < cutoff_games_played:
         return predicted_stats.round_stats()
 
+    # get total stats over season range
     for prev_season in range(season - season_range, season):
+        gp = g = xg = a = ppg = shg = special_g = s = h = b = 0
         
-        # normalize each stat by games played per season
-        gp = player_dictionary[prev_season].games_played
-        if gp != 0:
-            g = player_dictionary[prev_season].goals / gp
-            xg = player_dictionary[prev_season].expected_goals / gp
+        # played at least 1 game
+        if player_dictionary[prev_season].games_played > 0:
+            gp = player_dictionary[prev_season].games_played
+            g += player_dictionary[prev_season].goals
+            xg += player_dictionary[prev_season].expected_goals
 
-            a = player_dictionary[prev_season].assists / gp
+            a += player_dictionary[prev_season].assists
             
-            ppg = player_dictionary[prev_season].powerplay_goals / gp
-            shg = player_dictionary[prev_season].shorthanded_goals / gp
-            special_g = player_dictionary[prev_season].special_goals / gp
+            ppg += player_dictionary[prev_season].powerplay_goals
+            shg += player_dictionary[prev_season].shorthanded_goals
+            special_g += player_dictionary[prev_season].special_goals
 
-            s = player_dictionary[prev_season].shots / gp
-            h = player_dictionary[prev_season].hits / gp
-            b = player_dictionary[prev_season].blocks / gp
+            s += player_dictionary[prev_season].shots
+            h += player_dictionary[prev_season].hits
+            b += player_dictionary[prev_season].blocks
 
-            # TODO decide on best weights for expected and special goals
-            predicted_stats.games_played = 82
-            predicted_stats.goals += (g + ((xg - g)*0.2) + (special_g*0.5)) * 82/season_range
-            predicted_stats.assists += (a) * 82/season_range
-            predicted_stats.powerplay_goals += (ppg + (special_g*0.4)) * 82/season_range
-            predicted_stats.shorthanded_goals += (shg + (special_g*0.1)) * 82/season_range
-            predicted_stats.shots += (s) * 82/season_range
-            predicted_stats.hits += (h) * 82/season_range
-            predicted_stats.blocks += (b) * 82/season_range
+    # normalize stats by dividing by games played and propagating for 82 game season
+    # TODO decide on best weights for expected and special goals
+    predicted_stats.games_played = 82
+    predicted_stats.goals = (g + ((xg - g)*0.2) + (special_g*0.5)) * 82/gp
+    predicted_stats.assists = (a) * 82/gp
+    predicted_stats.points = round(predicted_stats.goals) + round(predicted_stats.goals)
+    predicted_stats.powerplay_goals = (ppg + (special_g*0.4)) * 82/gp
+    predicted_stats.shorthanded_goals = (shg + (special_g*0.1)) * 82/gp
+    predicted_stats.shots = (s) * 82/gp
+    predicted_stats.hits = (h) * 82/gp
+    predicted_stats.blocks = (b) * 82/gp
     
     # TODO formula for fantasy score
     predicted_stats.fantasy_score = 3*predicted_stats.goals + 2*predicted_stats.assists + 0.5*predicted_stats.shots + 0.5*predicted_stats.blocks + 0.5*predicted_stats.powerplay_goals + 0.5*predicted_stats.shorthanded_goals
 
-    # NOTE points calculated after rounding in class
     return predicted_stats.round_stats()
 
 def predict_season(season):

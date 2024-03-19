@@ -1,3 +1,4 @@
+import argparse
 import csv
 import os
 import pprint
@@ -91,6 +92,14 @@ for season in range(2008, 2023):
 
 #pprint.pprint(dataset_dictionary)
 
-# to access a player for a specific season (season = str, id = int):
-# dataset_dictionary['season'][id]
-# pprint.pprint(dataset_dictionary['2022-23'][8478402])
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('season', help="season to predict (i.e. 2022-23)")
+    parser.add_argument('id', help="id of player", type=int)
+    args = parser.parse_args()
+
+    season = int(args.season.split("-")[0])
+
+    # to access a player for a specific season (season = str, id = int):
+    # dataset_dictionary['season'][id]
+    pprint.pprint(dataset_dictionary[season][args.id])

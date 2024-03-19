@@ -37,14 +37,12 @@ def predict_player(season, id):
     # if there is insufficient data, cannot predict
     if games_played < cutoff_games_played:
         return predicted_stats.round_stats()
-
+    gp = g = xg = a = ppg = shg = special_g = s = h = b = 0
     # get total stats over season range
     for prev_season in range(season - season_range, season):
-        gp = g = xg = a = ppg = shg = special_g = s = h = b = 0
-        
         # played at least 1 game
         if player_dictionary[prev_season].games_played > 0:
-            gp = player_dictionary[prev_season].games_played
+            gp += player_dictionary[prev_season].games_played
             g += player_dictionary[prev_season].goals
             xg += player_dictionary[prev_season].expected_goals
 

@@ -31,7 +31,7 @@ class Player:
         self.shots = round(self.shots)
         self.hits = round(self.hits)
         self.blocks = round(self.blocks)
-        self.fantasy_score = round(self.fantasy_score, 5)
+        self.fantasy_score = round(self.fantasy_score, 1)
         return self
 
     def __str__(self):

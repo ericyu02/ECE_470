@@ -77,12 +77,16 @@ def predict_season(season):
     predicted_season = {}
     # get player id's from previous season
     for id in dataset_dictionary[season - 1]:
-        predicted_season[id] = predict_player(season, id)
+        predicted = predict_player(season, id)
+        if predicted.fantasy_score > 0:
+            predicted_season[id] = predicted
     
-    ranking = {}
+    ranking = []
     # sort predicted_season by points
     for id, stats in predicted_season.items():
         # TODO this deletes duplicate entries so need a different method
-        ranking[stats.fantasy_score] = stats
+        ranking.append(stats)
+
+    ranking.sort(key=lambda x: x.fantasy_score)
 
     return ranking

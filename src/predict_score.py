@@ -58,6 +58,7 @@ def predict_player(season, id):
 
     # normalize stats by dividing by games played and propagating for 82 game season
     # TODO decide on best weights for expected and special goals
+    # TODO implement linear regression model
     predicted_stats.games_played = 82
     predicted_stats.goals = (g + ((xg - g)*0.2) + (special_g*0.5)) * 82/gp
     predicted_stats.assists = (a) * 82/gp
@@ -68,7 +69,7 @@ def predict_player(season, id):
     predicted_stats.hits = (h) * 82/gp
     predicted_stats.blocks = (b) * 82/gp
     
-    # TODO formula for fantasy score
+    # formula for fantasy score
     predicted_stats.fantasy_score = 3*predicted_stats.goals + 2*predicted_stats.assists + 0.5*predicted_stats.shots + 0.5*predicted_stats.blocks + 0.5*predicted_stats.powerplay_goals + 0.5*predicted_stats.shorthanded_goals
 
     return predicted_stats.round_stats()
@@ -84,9 +85,7 @@ def predict_season(season):
     ranking = []
     # sort predicted_season by points
     for id, stats in predicted_season.items():
-        # TODO this deletes duplicate entries so need a different method
         ranking.append(stats)
-
     ranking.sort(key=lambda x: x.fantasy_score)
 
     return ranking

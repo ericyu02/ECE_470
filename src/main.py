@@ -17,10 +17,12 @@ season = int(args.season.split("-")[0])
 # Player    id
 # McDavid   8478402
 # Matthews  8479318
-# Maka:     8480069
+# Makar     8480069
 # Trocheck  8476389
 
 if args.id == 'all':
     pprint.pprint(predict_season(season))
 else:
     pprint.pprint(predict_player(season, int(args.id)))
+
+# TODO calculate average percentage difference between predicted score and real score

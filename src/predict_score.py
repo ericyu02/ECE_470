@@ -1,5 +1,6 @@
 from dataset import dataset_dictionary, Player
 import numpy as np
+import copy
 import pprint
 
 def predict_player(season, id):
@@ -76,12 +77,8 @@ def predict_player(season, id):
     elif (id not in dataset_dictionary[season]):
         pd = None    
     else:
-        # determine actual games played
-        pd_calculation = Player(id=id)
-        pd_calculation.season = season
-        pd_calculation.name = player_dictionary[season - 1].name
-        pd_calculation.team = player_dictionary[season - 1].team
-        pd_calculation.position = player_dictionary[season - 1].position
+        # recalculate estimated fantasy score based on actual games played
+        pd_calculation = copy.deepcopy(predicted_stats)
         pd_calculation.games_played = dataset_dictionary[season][id].games_played
         pd_calculation.goals = (g + ((xg - g)*0.2) + (special_g*0.5)) * pd_calculation.games_played/gp
         pd_calculation.assists = (a) * pd_calculation.games_played/gp
@@ -93,7 +90,6 @@ def predict_player(season, id):
 
         true_score = dataset_dictionary[season][id].get_fantasy_score()
         predicted_score = pd_calculation.get_fantasy_score()
-        print(true_score, predicted_score)
         pd = abs((true_score - predicted_score) / ((true_score + predicted_score)/2))
 
     return predicted_stats, pd

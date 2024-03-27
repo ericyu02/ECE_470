@@ -23,7 +23,8 @@ season = int(args.season.split("-")[0])
 if args.id == 'all':
     ranking, mpd = predict_season(season)
     pprint.pprint(ranking)
-    print('Mean Percentage Difference = {:.1%}'.format(mpd))
+    if mpd is not None:
+        print('Mean Percentage Difference = {:.1%}'.format(mpd))
 else:
     ranking, pd = predict_player(season, int(args.id))
     pprint.pprint(ranking)

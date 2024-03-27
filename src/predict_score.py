@@ -80,13 +80,13 @@ def predict_player(season, id):
         # recalculate estimated fantasy score based on actual games played
         pd_calculation = copy.deepcopy(predicted_stats)
         pd_calculation.games_played = dataset_dictionary[season][id].games_played
-        pd_calculation.goals = (g + ((xg - g)*0.2) + (special_g*0.5)) * pd_calculation.games_played/gp
-        pd_calculation.assists = (a) * pd_calculation.games_played/gp
-        pd_calculation.powerplay_goals = (ppg + (special_g*0.4)) * pd_calculation.games_played/gp
-        pd_calculation.shorthanded_goals = (shg + (special_g*0.1)) * pd_calculation.games_played/gp
-        pd_calculation.shots = (s) * pd_calculation.games_played/gp
-        pd_calculation.hits = (h) * pd_calculation.games_played/gp
-        pd_calculation.blocks = (b) * pd_calculation.games_played/gp
+        pd_calculation.goals = predicted_stats.goals/predicted_stats.games_played * pd_calculation.games_played
+        pd_calculation.assists = predicted_stats.assists/predicted_stats.games_played * pd_calculation.games_played
+        pd_calculation.powerplay_goals = predicted_stats.powerplay_goals/predicted_stats.games_played * pd_calculation.games_played
+        pd_calculation.shorthanded_goals = predicted_stats.shorthanded_goals/predicted_stats.games_played * pd_calculation.games_played
+        pd_calculation.shots = predicted_stats.shots/predicted_stats.games_played * pd_calculation.games_played
+        pd_calculation.hits = predicted_stats.hits/predicted_stats.games_played * pd_calculation.games_played
+        pd_calculation.blocks = predicted_stats.blocks/predicted_stats.games_played * pd_calculation.games_played
 
         true_score = dataset_dictionary[season][id].get_fantasy_score()
         predicted_score = pd_calculation.get_fantasy_score()
@@ -112,6 +112,9 @@ def predict_season(season):
     ranking.sort(key=lambda x: x.get_fantasy_score())
 
     # calculate mean percentage difference between predicted and true fantasy score
-    mpd = np.mean(percentage_difference)
-
+    if len(percentage_difference) > 0:
+       mpd = np.mean(percentage_difference)
+    else: 
+        mpd = None
+    
     return ranking, mpd

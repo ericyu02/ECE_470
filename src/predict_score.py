@@ -37,7 +37,7 @@ def predict_player(season, id):
 
     # if there is insufficient data, cannot predict
     if games_played < cutoff_games_played:
-        return predicted_stats.round_stats()
+        return predicted_stats, None
     gp = g = xg = a = ppg = shg = special_g = s = h = b = 0
     # get total stats over season range
     for prev_season in range(season - season_range, season):
@@ -63,20 +63,40 @@ def predict_player(season, id):
     predicted_stats.games_played = 82
     predicted_stats.goals = (g + ((xg - g)*0.2) + (special_g*0.5)) * 82/gp
     predicted_stats.assists = (a) * 82/gp
-    predicted_stats.points = round(predicted_stats.goals) + round(predicted_stats.goals)
     predicted_stats.powerplay_goals = (ppg + (special_g*0.4)) * 82/gp
     predicted_stats.shorthanded_goals = (shg + (special_g*0.1)) * 82/gp
     predicted_stats.shots = (s) * 82/gp
     predicted_stats.hits = (h) * 82/gp
     predicted_stats.blocks = (b) * 82/gp
-    
-    # formula for fantasy score
-    predicted_stats.fantasy_score = 3*predicted_stats.goals + 2*predicted_stats.assists + 0.5*predicted_stats.shots + 0.5*predicted_stats.blocks + 0.5*predicted_stats.powerplay_goals + 0.5*predicted_stats.shorthanded_goals
 
-    # calculate percentage difference between predicted and true fantasy score
-    pd = 100
-    
-    return predicted_stats.round_stats(), pd
+    # TODO calculate percentage difference between predicted and true fantasy score
+    # ignore if predicted season or player is not in dataset
+    if (season not in dataset_dictionary):
+        pd = None
+    elif (id not in dataset_dictionary[season]):
+        pd = None    
+    else:
+        # determine actual games played
+        pd_calculation = Player(id=id)
+        pd_calculation.season = season
+        pd_calculation.name = player_dictionary[season - 1].name
+        pd_calculation.team = player_dictionary[season - 1].team
+        pd_calculation.position = player_dictionary[season - 1].position
+        pd_calculation.games_played = dataset_dictionary[season][id].games_played
+        pd_calculation.goals = (g + ((xg - g)*0.2) + (special_g*0.5)) * pd_calculation.games_played/gp
+        pd_calculation.assists = (a) * pd_calculation.games_played/gp
+        pd_calculation.powerplay_goals = (ppg + (special_g*0.4)) * pd_calculation.games_played/gp
+        pd_calculation.shorthanded_goals = (shg + (special_g*0.1)) * pd_calculation.games_played/gp
+        pd_calculation.shots = (s) * pd_calculation.games_played/gp
+        pd_calculation.hits = (h) * pd_calculation.games_played/gp
+        pd_calculation.blocks = (b) * pd_calculation.games_played/gp
+
+        true_score = dataset_dictionary[season][id].get_fantasy_score()
+        predicted_score = pd_calculation.get_fantasy_score()
+        print(true_score, predicted_score)
+        pd = abs((true_score - predicted_score) / ((true_score + predicted_score)/2))
+
+    return predicted_stats, pd
 
 def predict_season(season):
     predicted_season = {}
@@ -84,18 +104,18 @@ def predict_season(season):
     # get player id's from previous season
     for id in dataset_dictionary[season - 1]:
         predicted, pd = predict_player(season, id)
-        if predicted.fantasy_score > 0:
+        if predicted.get_fantasy_score() > 0:
             predicted_season[id] = predicted
-            percentage_difference.append(pd)
+            if pd is not None:
+                percentage_difference.append(pd)
     
     ranking = []
     # sort predicted_season by points
     for id, stats in predicted_season.items():
         ranking.append(stats)
-    ranking.sort(key=lambda x: x.fantasy_score)
-    
+    ranking.sort(key=lambda x: x.get_fantasy_score())
+
     # calculate mean percentage difference between predicted and true fantasy score
-    print(percentage_difference)
-    mpd = np.mean(pd)
+    mpd = np.mean(percentage_difference)
 
     return ranking, mpd

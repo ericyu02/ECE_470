@@ -4,7 +4,7 @@ import os
 import pprint
 
 class Player:
-    def __init__(self, id='0000000', season='0000', name='NAME', team='TEAM', position='POS', games_played='0', goals='0', assists='0', points='0', powerplay_goals='0', shorthanded_goals='0', special_goals='0', expected_goals = '0', shots='0', hits='0', blocks='0', fantasy_score='0'):
+    def __init__(self, id='0000000', season='0000', name='NAME', team='TEAM', position='POS', games_played='0', goals='0', assists='0', powerplay_goals='0', shorthanded_goals='0', special_goals='0', expected_goals = '0', shots='0', hits='0', blocks='0'):
         self.id = int(id)
         self.season = int(season)
         self.name = str(name)
@@ -13,7 +13,6 @@ class Player:
         self.games_played = float(games_played)
         self.goals = float(goals)
         self.assists = float(assists)
-        self.points = float(points)
         self.powerplay_goals = float(powerplay_goals)
         self.shorthanded_goals = float(shorthanded_goals)
         self.special_goals = float(special_goals)
@@ -21,28 +20,25 @@ class Player:
         self.shots = float(shots)
         self.hits = float(hits)
         self.blocks = float(blocks)
-        self.fantasy_score = float(fantasy_score)
 
-    def round_stats(self):
-        self.goals = round(self.goals)
-        self.assists = round(self.assists)
-        self.points = self.goals + self.assists
-        self.powerplay_goals = round(self.powerplay_goals)
-        self.shorthanded_goals = round(self.shorthanded_goals)
-        self.shots = round(self.shots)
-        self.hits = round(self.hits)
-        self.blocks = round(self.blocks)
-        self.fantasy_score = round(self.fantasy_score, 1)
-        return self
+    def get_fantasy_score(self):
+        fantasy_score = 3*self.goals + 2*self.assists + 0.5*self.shots + 0.5*self.blocks + 0.5*self.powerplay_goals + 0.5*self.shorthanded_goals
+        return fantasy_score
 
     def __str__(self):
-        return str(self.name) + " " + str(self.position) + " " + str(self.season) + '-' + str(self.season + 1)[-2:] + " " + str(self.games_played) + "GP " + str(self.goals) + "G " + str(self.assists) + "A " + str(self.points) + "P " + str(self.powerplay_goals) + "PPG " + str(self.shorthanded_goals) + "SHG " + str(self.shots) + "SOG " + str(self.hits) + "H " + str(self.blocks) + "B " + str(self.fantasy_score) + "FS"
+        return str(self.name) + " " + str(self.position) + " " + str(self.season) + '-' + str(self.season + 1)[-2:] + " " + str(self.games_played) + "GP " + str(round(self.goals)) + "G " + str(round(self.assists)) + "A " + str(round(round(self.goals))+ round(self.assists)) + "P " + str(round(self.powerplay_goals)) + "PPG " + str(round(self.shorthanded_goals)) + "SHG " + str(round(self.shots)) + "SOG " + str(round(self.hits)) + "H " + str(round(self.blocks)) + "B " + str(round(self.get_fantasy_score(),1)) + "FS"
 
     __repr__ = __str__
 
+    def __iter__(self):
+        return self
+    
 dataset_dictionary = {}
 
-for season in range(2008, 2023):
+# NOTE included dataset is 2008-09 to an incomplete 2023-24
+start = 2008
+end = 2024
+for season in range(start, end):
     season_dictionary = {}
 
     current_dir = os.path.dirname(__file__)

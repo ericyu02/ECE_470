@@ -1,4 +1,5 @@
 from dataset import dataset_dictionary, Player
+import numpy as np
 import pprint
 
 def predict_player(season, id):
@@ -72,20 +73,29 @@ def predict_player(season, id):
     # formula for fantasy score
     predicted_stats.fantasy_score = 3*predicted_stats.goals + 2*predicted_stats.assists + 0.5*predicted_stats.shots + 0.5*predicted_stats.blocks + 0.5*predicted_stats.powerplay_goals + 0.5*predicted_stats.shorthanded_goals
 
-    return predicted_stats.round_stats()
+    # calculate percentage difference between predicted and true fantasy score
+    pd = 100
+    
+    return predicted_stats.round_stats(), pd
 
 def predict_season(season):
     predicted_season = {}
+    percentage_difference = []
     # get player id's from previous season
     for id in dataset_dictionary[season - 1]:
-        predicted = predict_player(season, id)
+        predicted, pd = predict_player(season, id)
         if predicted.fantasy_score > 0:
             predicted_season[id] = predicted
+            percentage_difference.append(pd)
     
     ranking = []
     # sort predicted_season by points
     for id, stats in predicted_season.items():
         ranking.append(stats)
     ranking.sort(key=lambda x: x.fantasy_score)
+    
+    # calculate mean percentage difference between predicted and true fantasy score
+    print(percentage_difference)
+    mpd = np.mean(pd)
 
-    return ranking
+    return ranking, mpd

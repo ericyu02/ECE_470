@@ -70,7 +70,7 @@ def predict_player(season, id):
     predicted_stats.hits = (h) * 82/gp
     predicted_stats.blocks = (b) * 82/gp
 
-    # TODO calculate percentage difference between predicted and true fantasy score
+    # calculate percentage difference between predicted and true fantasy score
     # ignore if predicted season or player is not in dataset
     if (season not in dataset_dictionary):
         pd = None

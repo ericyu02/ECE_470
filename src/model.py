@@ -4,11 +4,11 @@ import numpy as np
 model = keras.Sequential([keras.layers.Dense(units=1, input_shape=[1])])
 model.compile(optimizer='sgd', loss='mean_squared_error')
 
-xs = np.array([-1.0, 0.0, 1.0, 2.0, 3.0, 4.0], dtype=float)
-ys = np.array([-3.0, -1.0, 1.0, 3.0, 5.0, 7.0], dtype=float) 
+xs = np.array([4.28658537, 4.73417722, 4.2195122,  4.43636364], dtype=float)
+ys = np.array([0.01, 0.02, 0.03, 0.04], dtype=float) 
 
-model.fit(xs, ys, epochs=100)
+model.fit(ys, xs, epochs=200)
 
 model.save('../mdl/test.keras')
 
-# print(model.predict(np.array([10.0])))
+print(model.predict(np.array([0.05])))

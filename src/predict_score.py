@@ -2,6 +2,10 @@ from dataset import dataset_dictionary, Player
 import numpy as np
 import copy
 import pprint
+import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+from tensorflow import keras
+
 
 def predict_player(season, id):
     # add all player entries from dataset dictionary to player dictionary
@@ -60,7 +64,6 @@ def predict_player(season, id):
 
     # normalize stats by dividing by games played and propagating for 82 game season
     # weighted expected and special goals
-   
     predicted_stats.games_played = 82
     predicted_stats.goals = (g + ((xg - g)*0.2) + (special_g*0.5)) * 82/gp
     predicted_stats.assists = (a) * 82/gp
@@ -71,8 +74,23 @@ def predict_player(season, id):
     predicted_stats.blocks = (b) * 82/gp
     
     # TODO implement linear regression model
-   
+    # fantasy score xs & seasons ys
+    season_factor = 100
+    if not os.path.isfile('../mdl/' + str(id) + '.keras'):
+        xs = []
+        ys = []
+        min_season = season - season_range
+        for prev_season in range(min_season, season):
+            xs.append(float(prev_season - min_season + 1) / season_factor)
+            ys.append(float(player_dictionary[prev_season].get_fantasy_score()/player_dictionary[prev_season].games_played))
+        xs = np.array(xs, dtype=float)
+        ys = np.array(ys, dtype=float)
+        print(xs, ys)
+        generate_model(xs, ys, id)
 
+    model = keras.models.load_model('../mdl/' + str(id) + '.keras')
+    print(model.predict(np.array([(season_range + 1) / season_factor])))
+        
     # calculate percentage difference between predicted and true fantasy score
     # ignore if predicted season or player is not in dataset
     if (season not in dataset_dictionary):
@@ -121,3 +139,10 @@ def predict_season(season):
         mpd = None
     
     return ranking, mpd
+
+def generate_model(xs, ys, id):
+    model = keras.Sequential([keras.layers.Dense(units=1, input_shape=[1])])
+    model.compile(optimizer='sgd', loss='mean_squared_error')
+
+    model.fit(xs, ys, epochs=100)
+    model.save('../mdl/' + str(id) + '.keras')

@@ -59,8 +59,8 @@ def predict_player(season, id):
             b += player_dictionary[prev_season].blocks
 
     # normalize stats by dividing by games played and propagating for 82 game season
-    # TODO decide on best weights for expected and special goals
-    # TODO implement linear regression model
+    # weighted expected and special goals
+   
     predicted_stats.games_played = 82
     predicted_stats.goals = (g + ((xg - g)*0.2) + (special_g*0.5)) * 82/gp
     predicted_stats.assists = (a) * 82/gp
@@ -69,6 +69,9 @@ def predict_player(season, id):
     predicted_stats.shots = (s) * 82/gp
     predicted_stats.hits = (h) * 82/gp
     predicted_stats.blocks = (b) * 82/gp
+    
+    # TODO implement linear regression model
+   
 
     # calculate percentage difference between predicted and true fantasy score
     # ignore if predicted season or player is not in dataset

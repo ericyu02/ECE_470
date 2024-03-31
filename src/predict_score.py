@@ -73,15 +73,14 @@ def predict_player(season, id):
     # season [xs] & fantasy score [ys]
     xs = []
     ys = []
-    min_season = season - season_range
-    for prev_season in range(min_season, season):
+    for prev_season in range(season - season_range, season):
         if player_dictionary[prev_season].get_fantasy_score() > 0:
-            xs.append(float(prev_season - min_season + 1))
+            xs.append(float(prev_season))
             ys.append(float(player_dictionary[prev_season].get_fantasy_score()/player_dictionary[prev_season].games_played))
     
     model = LinearRegression().fit(np.array(xs).reshape((-1, 1)), np.array(ys))
 
-    model_fantasy_score = model.predict(np.array([(season_range + 1)]).reshape((-1, 1)))[0]
+    model_fantasy_score = model.predict(np.array([(season)]).reshape((-1, 1)))[0]
     
     # calculate percentage difference between predicted and true fantasy score
     # ignore if predicted season or player is not in dataset
@@ -100,9 +99,10 @@ def predict_player(season, id):
         pd_calculation.shots = predicted_stats.shots/predicted_stats.games_played * pd_calculation.games_played
         pd_calculation.hits = predicted_stats.hits/predicted_stats.games_played * pd_calculation.games_played
         pd_calculation.blocks = predicted_stats.blocks/predicted_stats.games_played * pd_calculation.games_played
-
+        
+        averages_vs_model_weight = 0.75
+        predicted_score = (pd_calculation.get_fantasy_score())*(averages_vs_model_weight) + (model_fantasy_score * pd_calculation.games_played)*(1-averages_vs_model_weight)
         true_score = dataset_dictionary[season][id].get_fantasy_score()
-        predicted_score = (pd_calculation.get_fantasy_score())*0.75 + (model_fantasy_score * pd_calculation.games_played)*0.25
         pd = abs((true_score - predicted_score) / ((true_score + predicted_score)/2))
 
     predicted_stats.fantasy_score = ((predicted_stats.get_fantasy_score()) + (model_fantasy_score * predicted_stats.games_played)) / 2

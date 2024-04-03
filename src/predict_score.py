@@ -88,6 +88,13 @@ def predict_player(season, id):
         pd = None
     elif (id not in dataset_dictionary[season]):
         pd = None
+    # For data analysis
+    # elif (predicted_stats.fantasy_score < 250):
+    #     pd = None
+    # elif (predicted_stats.position == 'D'):
+    #     pd = None
+    # elif (predicted_stats.position != 'D'):
+    #     pd = None
     else:
         # recalculate estimated fantasy score based on actual games played
         pd_calculation = copy.deepcopy(predicted_stats)
@@ -100,7 +107,7 @@ def predict_player(season, id):
         pd_calculation.hits = predicted_stats.hits/predicted_stats.games_played * pd_calculation.games_played
         pd_calculation.blocks = predicted_stats.blocks/predicted_stats.games_played * pd_calculation.games_played
         
-        averages_vs_model_weight = 0.75
+        averages_vs_model_weight = 0.7
         predicted_score = (pd_calculation.get_fantasy_score())*(averages_vs_model_weight) + (model_fantasy_score * pd_calculation.games_played)*(1-averages_vs_model_weight)
         true_score = dataset_dictionary[season][id].get_fantasy_score()
         pd = abs((true_score - predicted_score) / ((true_score + predicted_score)/2))

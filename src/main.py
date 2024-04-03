@@ -6,7 +6,6 @@ import pprint
 from dataset import dataset_dictionary
 from predict_score import predict_player, predict_season
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument('season', help="season to predict (i.e. 2022-23)")
 parser.add_argument('id', help="id of player / 'all'", type=str)
@@ -20,7 +19,16 @@ season = int(args.season.split("-")[0])
 # Makar     8480069
 # Trocheck  8476389
 
-if args.id == 'all':
+# For data analysis, remove for final submission
+if args.id == 'test':
+    for season in range(2009, season + 1):
+        ranking, mpd = predict_season(season)
+        #pprint.pprint(ranking)
+        if mpd is not None:
+            print(str(season) + ' Accuracy = {:.1%}'.format(1-mpd))
+# ---------------------------
+
+elif args.id == 'all':
     ranking, mpd = predict_season(season)
     pprint.pprint(ranking)
     if mpd is not None:

@@ -90,13 +90,33 @@ for season in range(start, end):
 #pprint.pprint(dataset_dictionary)
 
 if __name__ == "__main__":
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('season', help="season to predict (i.e. 2022-23)")
+    # parser.add_argument('id', help="id of player", type=int)
+    # args = parser.parse_args()
+
+    # season = int(args.season.split("-")[0])
+
+    # # to access a player for a specific season (season = str, id = int):
+    # # dataset_dictionary['season'][id]
+    # pprint.pprint(dataset_dictionary[season][args.id])
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('season', help="season to predict (i.e. 2022-23)")
-    parser.add_argument('id', help="id of player", type=int)
+    parser.add_argument('name', help="name of player")
+    
     args = parser.parse_args()
-
-    season = int(args.season.split("-")[0])
-
-    # to access a player for a specific season (season = str, id = int):
-    # dataset_dictionary['season'][id]
-    pprint.pprint(dataset_dictionary[season][args.id])
+    
+    # LUT
+    LUT_id = []
+    LUT_output = []
+    keys = list(dataset_dictionary.keys())
+    for season in range(keys[len(keys)-1], keys[0]-1, -1):
+        for id in dataset_dictionary[season]:
+            if args.name.lower() in dataset_dictionary[season][id].name.lower():
+                entry = str(id)
+                output = str(dataset_dictionary[season][id].name) + ' ' + str(dataset_dictionary[season][id].team) + ' ' + str(dataset_dictionary[season][id].position) + ': ' + str(id)
+                if entry not in LUT_id:
+                    LUT_id.append(entry)
+                    LUT_output.append(output)
+    for line in LUT_output:
+        print(line)

@@ -2,6 +2,7 @@ import argparse
 import csv
 import os
 import pprint
+import numpy as np
 
 from dataset import dataset_dictionary
 from predict_score import predict_player, predict_season
@@ -21,11 +22,14 @@ season = int(args.season.split("-")[0])
 
 # For data analysis, remove for final submission
 if args.id == 'test':
+    accuracy = []
     for season in range(2009, season + 1):
         ranking, mpd = predict_season(season)
         #pprint.pprint(ranking)
         if mpd is not None:
-            print(str(season) + ' Accuracy = {:.1%}'.format(1-mpd))
+            print(str(season) + '-' + str(season + 1)[-2:] + ': Accuracy = {:.1%}'.format(1-mpd))
+            accuracy.append(1-mpd)
+    print('Average = {:.1%}'.format(np.mean(accuracy)))
 # ---------------------------
 
 elif args.id == 'all':

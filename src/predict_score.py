@@ -65,7 +65,7 @@ def predict_player(season, id):
     predicted_stats.assists = (a) * predicted_stats.games_played/gp
     predicted_stats.powerplay_goals = (ppg + (special_g*0.4)) * predicted_stats.games_played/gp
     predicted_stats.shorthanded_goals = (shg + (special_g*0.1)) * predicted_stats.games_played/gp
-    predicted_stats.shots = (s) * predicted_stats.games_played/gp
+    predicted_stats.shots = (s) * predicted_stats.games_played/gp 
     predicted_stats.hits = (h) * predicted_stats.games_played/gp
     predicted_stats.blocks = (b) * predicted_stats.games_played/gp
 

@@ -14,13 +14,7 @@ args = parser.parse_args()
 
 season = int(args.season.split("-")[0])
 
-# Player    id
-# McDavid   8478402
-# Matthews  8479318
-# Makar     8480069
-# Trocheck  8476389
-
-# For data analysis, remove for final submission
+# for data analysis, remove for final submission
 if args.id == 'test':
     accuracy = []
     for season in range(2009, season + 1):

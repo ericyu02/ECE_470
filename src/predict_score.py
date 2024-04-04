@@ -20,7 +20,7 @@ def predict_player(season, id):
             player_dictionary[temp_season] = Player(id=id, season=temp_season, name=player_dictionary[min_season].name, team='N/A', position='N/A')
     #pprint.pprint(player_dictionary)
             
-    # figure out range of seasons to use based on games played
+    # determine range of seasons to use based on total games played
     season_range = 0
     games_played = 0
     threshold_games_played = 200
@@ -89,7 +89,7 @@ def predict_player(season, id):
     elif (id not in dataset_dictionary[season]):
         pd = None
     # For data analysis
-    # elif (predicted_stats.fantasy_score < 250):
+    # elif (predicted_stats.get_fantasy_score() < 250):
     #     pd = None
     # elif (predicted_stats.position == 'D'):
     #     pd = None

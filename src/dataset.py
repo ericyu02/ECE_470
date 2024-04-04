@@ -90,23 +90,13 @@ for season in range(start, end):
 #pprint.pprint(dataset_dictionary)
 
 if __name__ == "__main__":
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('season', help="season to predict (i.e. 2022-23)")
-    # parser.add_argument('id', help="id of player", type=int)
-    # args = parser.parse_args()
-
-    # season = int(args.season.split("-")[0])
-
-    # # to access a player for a specific season (season = str, id = int):
-    # # dataset_dictionary['season'][id]
-    # pprint.pprint(dataset_dictionary[season][args.id])
-
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('name', help="name of player")
     
     args = parser.parse_args()
     
-    # LUT
+    # LUT for player id given name
     LUT_id = []
     LUT_output = []
     keys = list(dataset_dictionary.keys())

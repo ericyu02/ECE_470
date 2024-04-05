@@ -79,10 +79,15 @@ def predict_player(season, id):
             xs.append(float(prev_season))
             ys.append(float(player_dictionary[prev_season].get_fantasy_score()/player_dictionary[prev_season].games_played))
     
+    # train model with fantasy scores for each previous season
     model = LinearRegression().fit(np.array(xs).reshape((-1, 1)), np.array(ys))
-
+    
+    # use model to obtain fantasy score prediction for season
     model_fantasy_score = model.predict(np.array([(season)]).reshape((-1, 1)))[0]
     
+    # weighting for averages model vs. linear regression model
+    averages_vs_lr_weight = 0.7
+
     # calculate percentage difference between predicted and true fantasy score
     # ignore if predicted season or player is not in dataset
     if (season not in dataset_dictionary):
@@ -108,13 +113,12 @@ def predict_player(season, id):
         pd_calculation.hits = predicted_stats.hits/predicted_stats.games_played * pd_calculation.games_played
         pd_calculation.blocks = predicted_stats.blocks/predicted_stats.games_played * pd_calculation.games_played
         
-        averages_vs_model_weight = 0.7
-        predicted_score = (pd_calculation.get_fantasy_score())*(averages_vs_model_weight) + (model_fantasy_score * pd_calculation.games_played)*(1-averages_vs_model_weight)
+        predicted_score = (pd_calculation.get_fantasy_score())*(averages_vs_lr_weight) + (model_fantasy_score * pd_calculation.games_played)*(1-averages_vs_lr_weight)
         true_score = dataset_dictionary[season][id].get_fantasy_score()
         pd = abs((true_score - predicted_score) / ((true_score + predicted_score)/2))
     
     # predict final fantasy score
-    predicted_stats.fantasy_score = ((predicted_stats.get_fantasy_score()) + (model_fantasy_score * predicted_stats.games_played)) / 2
+    predicted_stats.fantasy_score = (predicted_stats.get_fantasy_score())*(averages_vs_lr_weight) + (model_fantasy_score * predicted_stats.games_played)*(1-averages_vs_lr_weight)
     
     return predicted_stats, pd
 

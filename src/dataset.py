@@ -104,7 +104,7 @@ if __name__ == "__main__":
         for id in dataset_dictionary[season]:
             if args.name.lower() in dataset_dictionary[season][id].name.lower():
                 entry = str(id)
-                output = str(dataset_dictionary[season][id].name) + ' ' + str(dataset_dictionary[season][id].team) + ' ' + str(dataset_dictionary[season][id].position) + ': ' + str(id)
+                output = str(dataset_dictionary[season][id].name) + ' ' + str(dataset_dictionary[season][id].team) + ' ' + str(dataset_dictionary[season][id].position) + ' ' + '[' + str(id) + ']' 
                 if entry not in LUT_id:
                     LUT_id.append(entry)
                     LUT_output.append(output)

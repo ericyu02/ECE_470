@@ -94,13 +94,6 @@ def predict_player(season, id):
         pd = None
     elif (id not in dataset_dictionary[season]):
         pd = None
-    # for data analysis
-    # elif (predicted_stats.get_fantasy_score() < 250):
-    #     pd = None
-    # elif (predicted_stats.position == 'D'):
-    #     pd = None
-    # elif (predicted_stats.position != 'D'):
-    #     pd = None
     else:
         # recalculate estimated fantasy score based on actual games played
         pd_calculation = copy.deepcopy(predicted_stats)

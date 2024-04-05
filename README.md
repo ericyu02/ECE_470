@@ -4,23 +4,25 @@ ECE 470 - Artificial Intelligence
 * Benjamin Philipenko
 * Eric Yu
 
+NHL Fantasy Score prediction using Linear Regression Model
+
 ## REQUIREMENTS
-pip install scikit-learn
+Python3
+`pip install scikit-learn`
+`pip install numpy`
 
 ----
 
-## GET PLAYER ID
-.\dataset.py name
-- name cannot have spaces so pick first or last name
+## How to use:
+Ensure you are in the src/ directory.
 
-----
+## Find unqiue player id
+- Replace `'player_name'` with the name of the player you want to get the id for.
+- Name cannot have spaces so pick first or last name 
+`py ./dataset.py 'player_name'` 
 
-## GENERATE FANTASY HOCKEY SCORE FOR SPECIFIC PLAYER
-.\main.py season id
-- season in format xxxx-xx
-
-----
-
-## GENERATE FANTASY HOCKEY SCORE FOR SPECIFIC SEASON
-.\main.py season 'all'
-- season in format xxxx-xx
+## Get Fantasy Score Prediction 
+- Replace `'season'` with the season you want to predict ie. 2022-23. 
+- Enter `all` to predict all player fantasy scores or replace `'player_id'` to predict a specific player's fantasy score.
+All players: `py main.py 'season' all`
+Specific Player: `py main.py 'season' 'player_id'`

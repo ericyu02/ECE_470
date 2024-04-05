@@ -96,7 +96,7 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
-    # LUT for player id given name
+    # lookup table for player id given name
     LUT_id = []
     LUT_output = []
     keys = list(dataset_dictionary.keys())

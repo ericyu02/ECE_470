@@ -1,7 +1,8 @@
-from dataset import dataset_dictionary, Player
+import pprint
 import numpy as np
 import copy
-import pprint
+
+from dataset import dataset_dictionary, Player
 from sklearn.linear_model import LinearRegression
 
 def predict_player(season, id):
@@ -88,7 +89,7 @@ def predict_player(season, id):
         pd = None
     elif (id not in dataset_dictionary[season]):
         pd = None
-    # For data analysis
+    # for data analysis
     # elif (predicted_stats.get_fantasy_score() < 250):
     #     pd = None
     # elif (predicted_stats.position == 'D'):
@@ -111,7 +112,8 @@ def predict_player(season, id):
         predicted_score = (pd_calculation.get_fantasy_score())*(averages_vs_model_weight) + (model_fantasy_score * pd_calculation.games_played)*(1-averages_vs_model_weight)
         true_score = dataset_dictionary[season][id].get_fantasy_score()
         pd = abs((true_score - predicted_score) / ((true_score + predicted_score)/2))
-
+    
+    # predict final fantasy score
     predicted_stats.fantasy_score = ((predicted_stats.get_fantasy_score()) + (model_fantasy_score * predicted_stats.games_played)) / 2
     
     return predicted_stats, pd
@@ -128,7 +130,7 @@ def predict_season(season):
                 percentage_difference.append(pd)
     
     ranking = []
-    # sort predicted_season by points
+    # sort predicted_season by fantasy score
     for id, stats in predicted_season.items():
         ranking.append(stats)
     ranking.sort(key=lambda x: x.fantasy_score)

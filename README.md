@@ -14,10 +14,10 @@ To install all dependencies:\
 
 ----
 
-## How to use:
+## HOW TO USE
 Ensure you are in the src/ directory.
 
-### Find unqiue player id
+### Find Unqiue Player id
 - Replace `'player_name'` with the name of the player you want to get the id for.
 - Name cannot have spaces so pick first or last name \
 `py ./dataset.py 'player_name'` 

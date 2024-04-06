@@ -1,6 +1,6 @@
 import pprint
-import numpy as np
 import copy
+import numpy as np
 
 from dataset import dataset_dictionary, Player
 from sklearn.linear_model import LinearRegression

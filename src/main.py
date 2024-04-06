@@ -14,19 +14,8 @@ args = parser.parse_args()
 
 season = int(args.season.split("-")[0])
 
-# for data analysis, remove for final submission
-if args.id == 'test':
-    accuracy = []
-    for season in range(2009, season + 1):
-        ranking, mpd = predict_season(season)
-        #pprint.pprint(ranking)
-        if mpd is not None:
-            print(str(season) + '-' + str(season + 1)[-2:] + ': Accuracy = {:.1%}'.format(1-mpd))
-            accuracy.append(1-mpd)
-    print('Average = {:.1%}'.format(np.mean(accuracy)))
-# ---------------------------
-
-elif args.id == 'all':
+# predict season or specific player
+if args.id == 'all':
     ranking, mpd = predict_season(season)
     pprint.pprint(ranking)
     if mpd is not None:

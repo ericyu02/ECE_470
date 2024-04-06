@@ -6,8 +6,11 @@ ECE 470 - Artificial Intelligence
 
 ## REQUIREMENTS
 Python3 \
-`pip install scikit-learn` \
-`pip install numpy`
+numpy \
+scikit-learn 
+
+To install all dependencies:\
+`pip3 install -r requirements.txt`
 
 ----
 

@@ -36,7 +36,7 @@ class Player:
     
 dataset_dictionary = {}
 
-# NOTE included dataset is 2008-09 to an incomplete 2023-24
+# NOTE included dataset is 2008-09 to 2023-24
 start = 2008
 end = 2024
 for season in range(start, end):
